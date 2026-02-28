@@ -5,7 +5,6 @@ import com.staffrotationsystem.staffrotation.exception.DuplicateResourceExceptio
 import com.staffrotationsystem.staffrotation.exception.ResourceNotFoundException;
 import com.staffrotationsystem.staffrotation.repository.StaffRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
