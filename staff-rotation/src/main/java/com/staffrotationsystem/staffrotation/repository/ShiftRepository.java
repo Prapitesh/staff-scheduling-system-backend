@@ -8,4 +8,6 @@ import java.util.Optional;
 
 public interface ShiftRepository extends JpaRepository<Shift,Long> {
     Optional<Shift> findByShiftType(ShiftType shiftType);
+
+
 }

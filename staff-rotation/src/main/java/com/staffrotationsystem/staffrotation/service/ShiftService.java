@@ -28,5 +28,7 @@ public class ShiftService {
     public Shift getShiftById(Long shiftId){
         return shiftRepository.findById(shiftId).orElseThrow(()->new RuntimeException("Shift not found"));
     }
+
+
 }
 

@@ -14,7 +14,6 @@ import org.springframework.stereotype.Service;
 
 import java.time.DayOfWeek;
 import java.time.LocalDate;
-import java.time.temporal.IsoFields;
 import java.util.List;
 import java.util.Optional;
 
@@ -82,10 +81,7 @@ public class RotationService {
             throw new DuplicateResourceException("Rotation already generated for this week");
         }
 
-        List<Staff> staffList = staffRepository.findAll()
-                .stream()
-                .filter(Staff::getActive)
-                .toList();
+        List<Staff> staffList = staffRepository.findByActiveTrue();
 
         Shift dayShift = shiftRepository.findByShiftType(ShiftType.DAY)
                 .orElseThrow();
@@ -100,7 +96,7 @@ public class RotationService {
 
         for (Staff staff : staffList) {
 
-            // 1️⃣ Decide base shift for Monday (weekly fairness)
+            //  Decide base shift for Monday (weekly fairness)
             Shift baseShift;
             if (evenWeek) {
                 baseShift = dayShift;
@@ -108,7 +104,7 @@ public class RotationService {
                 baseShift = nightShift;
             }
 
-            // 2️⃣ Prevent same shift as previous week
+            //  Prevent same shift as previous week
             Optional<StaffShiftAssignment> lastAssignmentOpt =
                     assignmentRepository.findTopByStaffOrderByShiftDateDesc(staff);
 
@@ -120,7 +116,7 @@ public class RotationService {
                 }
             }
 
-            // 3️⃣ Generate 7 days with strict alternation
+            //  Generate 7 days with strict alternation
             for (int day = 0; day < 7; day++) {
 
                 LocalDate currentDate = weekStart.plusDays(day);
@@ -148,4 +144,6 @@ public class RotationService {
 //    public List<Shift> getAllRotation() {
 //        return shiftRepository.findAll();
 //    }
+
+
 }

@@ -1,4 +1,5 @@
 package com.staffrotationsystem.staffrotation.entity;
+import com.staffrotationsystem.staffrotation.enums.AvailabilityStatus;
 import com.staffrotationsystem.staffrotation.enums.StaffRole;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
@@ -38,6 +39,10 @@ public class Staff {
     @CreationTimestamp
     @Column(updatable = false)
     private LocalDateTime createdAt;
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private AvailabilityStatus status = AvailabilityStatus.AVAILABLE;
 
     @ElementCollection
     @CollectionTable(name = "staff_skills", joinColumns = @JoinColumn(name = "staff_id"))
