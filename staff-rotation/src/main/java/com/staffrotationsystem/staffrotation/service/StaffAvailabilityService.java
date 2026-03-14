@@ -8,6 +8,9 @@ import com.staffrotationsystem.staffrotation.repository.StaffRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.Collections;
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 public class StaffAvailabilityService {
@@ -28,4 +31,10 @@ public class StaffAvailabilityService {
 
         return availabilityRepository.save(availability);
     }
+
+    public List<StaffAvailability> find(Long staffId) {
+        return availabilityRepository.findAllByStaffId(staffId);
     }
+
+
+}

@@ -1,5 +1,6 @@
 package com.staffrotationsystem.staffrotation.controller;
 
+import com.staffrotationsystem.staffrotation.dto.MonthlyShiftSummaryDTO;
 import com.staffrotationsystem.staffrotation.dto.SpecificStaffMemberDTO;
 import com.staffrotationsystem.staffrotation.dto.StaffShiftCountDTO;
 import com.staffrotationsystem.staffrotation.dto.StaffShiftDTO;
@@ -93,4 +94,25 @@ public class StaffShiftAssignmentController {
     public ResponseEntity<List<String>> getStaffWorkingonDifferentShiftsinmonth(@RequestParam int month,@RequestParam int year){
         return ResponseEntity.ok(staffShiftAssignmentService.getStaffWorkingonDifferentShiftsinmonth(month,year));
     }
+
+    @PostMapping("/rotation")
+    public ResponseEntity<String> generateRotation(
+            @RequestParam LocalDate startDate,
+            @RequestParam int days) {
+
+        staffShiftAssignmentService.generateRotation(startDate, days);
+
+        return ResponseEntity.ok("Rotation generated successfully");
+    }
+
+    @GetMapping("/monthly-summary")
+    public ResponseEntity<List<MonthlyShiftSummaryDTO>> getMonthlySummary(
+            @RequestParam int month,
+            @RequestParam int year) {
+
+        return ResponseEntity.ok(
+                staffShiftAssignmentService.getMonthlyShiftSummary(month, year)
+        );
+    }
+
 }

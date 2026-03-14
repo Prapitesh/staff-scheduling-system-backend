@@ -24,6 +24,7 @@ public class StaffShiftAssignment {
     @JoinColumn(name = "staff_id")
     private Staff staff;
 
+
     @ManyToOne(optional = false)
     @JoinColumn(name = "shift_id")
     private Shift shift;
@@ -31,4 +32,8 @@ public class StaffShiftAssignment {
     @Column(name = "shift_date",nullable = false)
     private LocalDate shiftDate;
 
+    @ManyToOne
+    @JoinColumn(name = "schedule_id")
+    private RotationSchedule schedule;
 }
+

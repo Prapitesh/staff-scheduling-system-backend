@@ -29,9 +29,9 @@ public class Staff {
     @Column(nullable = false)
     private StaffRole role;
 
-    @NotBlank(message = "Department is required")
-    @Column(nullable = false)
-    private String department;
+    @ManyToOne
+    @JoinColumn(name = "department_id")
+    private Department department;
 
     @Column(nullable = false)
     private Boolean active=true;

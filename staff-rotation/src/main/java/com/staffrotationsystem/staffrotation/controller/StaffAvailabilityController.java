@@ -7,6 +7,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/api/availability")
 @RequiredArgsConstructor
@@ -19,5 +21,10 @@ public class StaffAvailabilityController {
             @RequestBody StaffAvailabilityRequestDTO request) {
 
         return ResponseEntity.ok(availabilityService.markAvailability(request));
+    }
+
+    @GetMapping("/{staffId}")
+    public ResponseEntity<List<StaffAvailability>> getAvailability(@PathVariable Long staffId) {
+        return ResponseEntity.ok(availabilityService.find(staffId));
     }
 }

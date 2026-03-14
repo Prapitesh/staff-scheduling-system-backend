@@ -1,5 +1,6 @@
 package com.staffrotationsystem.staffrotation.repository;
 
+import com.staffrotationsystem.staffrotation.dto.MonthlyShiftSummaryDTO;
 import com.staffrotationsystem.staffrotation.dto.SpecificStaffMemberDTO;
 import com.staffrotationsystem.staffrotation.dto.StaffShiftCountDTO;
 import com.staffrotationsystem.staffrotation.dto.StaffShiftDTO;
@@ -18,6 +19,36 @@ import java.util.Optional;
 
 @Repository
 public interface StaffShiftAssignmentRepository extends JpaRepository<StaffShiftAssignment,Long> {
+
+    @Query("""
+SELECT COUNT(a)
+FROM StaffShiftAssignment a
+GROUP BY a.staff.id, a.shiftDate
+HAVING COUNT(a) > 1
+""")
+    Long countDuplicateAssignments();
+
+    @Query("""
+SELECT COUNT(a)
+FROM StaffShiftAssignment a
+JOIN LeaveRequest l
+ON a.staff.id = l.staff.id
+WHERE a.shiftDate BETWEEN l.startDate AND l.endDate
+AND l.status = 'APPROVED'
+""")
+    Long countStaffAssignedOnLeave();
+
+    @Query("""
+SELECT COUNT(s)
+FROM Shift s
+WHERE (
+    SELECT COUNT(a)
+    FROM StaffShiftAssignment a
+    WHERE a.shift.id = s.id
+) < 2
+""")
+    Long countUnderstaffedShifts();
+
     Optional<StaffShiftAssignment> findByStaffAndShiftDate(Staff staff, LocalDate shiftDate);
 
     boolean existsByShiftDateBetween(LocalDate start, LocalDate end);
@@ -93,4 +124,25 @@ GROUP BY a.staff.name
 HAVING COUNT(DISTINCT a.shift.shiftType) > 1
 """)
     List<String> findStaffWorkingDifferentShiftsInMonth(int month, int year);
+
+
+    @Query("""
+SELECT new com.staffrotationsystem.staffrotation.dto.MonthlyShiftSummaryDTO(
+    s.name,
+    SUM(CASE WHEN sh.shiftType = 'DAY' THEN 1 ELSE 0 END),
+    SUM(CASE WHEN sh.shiftType = 'NIGHT' THEN 1 ELSE 0 END),
+    COUNT(a)
+)
+FROM StaffShiftAssignment a
+JOIN a.staff s
+JOIN a.shift sh
+WHERE MONTH(a.shiftDate) = :month AND YEAR(a.shiftDate) = :year
+GROUP BY s.name
+""")
+    List<MonthlyShiftSummaryDTO> getMonthlyShiftSummary(int month, int year);
+
+    void deleteByShiftDateBetween(LocalDate startDate, LocalDate endDate);
+
+    List<StaffShiftAssignment> findAllByOrderByShiftDateAsc();
 }
+

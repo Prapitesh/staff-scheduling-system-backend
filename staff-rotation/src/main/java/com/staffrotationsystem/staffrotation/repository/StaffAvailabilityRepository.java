@@ -6,11 +6,14 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Optional;
 
 @Repository
 public interface StaffAvailabilityRepository extends JpaRepository<StaffAvailability, Long> {
  Optional<StaffAvailability> findByStaffIdAndDate(Long staffId, LocalDate date);
+
+ List<StaffAvailability> findAllByStaffId(Long staffId);
 
 boolean existsByStaffIdAndDateAndStatus(Long staffId, LocalDate date, AvailabilityStatus status);
 }
