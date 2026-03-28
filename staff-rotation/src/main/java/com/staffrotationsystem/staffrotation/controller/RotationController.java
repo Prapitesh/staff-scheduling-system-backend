@@ -5,6 +5,7 @@ import com.staffrotationsystem.staffrotation.entity.Staff;
 import com.staffrotationsystem.staffrotation.service.RotationService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -17,6 +18,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/rotation")
 @RequiredArgsConstructor
+@CrossOrigin(origins = "*")
 public class RotationController {
 
     private final RotationService rotationService;
@@ -31,4 +33,15 @@ public class RotationController {
 //    public ResponseEntity<List<Shift>> findAllRotations(){
 //        return ResponseEntity.ok(rotationService.getAllRotation());
 //    }
+
+    @PostMapping("/staff")
+    public ResponseEntity<String> generateRotationForStaff(
+            @RequestParam Long staffId,
+            @RequestParam LocalDate weekStart) {
+
+        rotationService.generateWeeklyRotationForStaff(staffId, weekStart);
+
+        return ResponseEntity.ok("Weekly rotation generated for staff");
+    }
 }
+

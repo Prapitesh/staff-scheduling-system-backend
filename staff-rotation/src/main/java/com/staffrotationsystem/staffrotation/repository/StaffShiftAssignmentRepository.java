@@ -144,5 +144,7 @@ GROUP BY s.name
     void deleteByShiftDateBetween(LocalDate startDate, LocalDate endDate);
 
     List<StaffShiftAssignment> findAllByOrderByShiftDateAsc();
+
+    boolean existsByStaffAndShiftDate(Staff staff, LocalDate shiftDate);
 }
 

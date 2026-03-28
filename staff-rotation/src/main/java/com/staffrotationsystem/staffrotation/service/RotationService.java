@@ -146,4 +146,32 @@ public class RotationService {
 //    }
 
 
+    public void generateWeeklyRotationForStaff(Long staffId, LocalDate weekStart) {
+
+        Staff staff = staffRepository.findById(staffId)
+                .orElseThrow(() -> new RuntimeException("Staff not found"));
+
+        List<Shift> shifts = shiftRepository.findAll();
+        for (int i = 0; i < 7; i++) {
+
+            LocalDate currentDate = weekStart.plusDays(i);
+            boolean exists = assignmentRepository
+                    .existsByStaffAndShiftDate(staff, currentDate);
+
+            if (exists) {
+                continue; // skip duplicate
+            }
+            // Simple round-robin shift selection
+            Shift shift = shifts.get(i % shifts.size());
+
+            StaffShiftAssignment assignment = new StaffShiftAssignment();
+            assignment.setStaff(staff);
+            assignment.setShift(shift);
+            assignment.setShiftDate(currentDate);
+            if (!assignmentRepository.existsByStaffAndShiftDate(staff, currentDate)) {
+                assignmentRepository.save(assignment);
+            }
+            assignmentRepository.save(assignment);
+        }
+    }
 }
