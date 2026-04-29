@@ -18,7 +18,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/rotation")
 @RequiredArgsConstructor
-@CrossOrigin(origins = "*")
+//@CrossOrigin(origins = "*")
 public class RotationController {
 
     private final RotationService rotationService;

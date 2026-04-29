@@ -2,9 +2,12 @@ package com.staffrotationsystem.staffrotation.controller;
 
 import com.staffrotationsystem.staffrotation.entity.StaffShiftAssignment;
 import com.staffrotationsystem.staffrotation.service.StaffShiftAssignmentService;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.web.csrf.CsrfToken;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -16,7 +19,7 @@ import java.time.LocalDate;
 @RestController
 @RequestMapping("/api/admin/rotation")
 @RequiredArgsConstructor
-@CrossOrigin(origins = "*")
+//@CrossOrigin(origins = "*")
 public class AdminRotationController {
 
     private final StaffShiftAssignmentService staffShiftAssignmentService;
@@ -27,6 +30,11 @@ public class AdminRotationController {
         staffShiftAssignmentService.generateNextMonthRotation();
 
         return ResponseEntity.ok("Next month rotation generated successfully");
+    }
+
+    @GetMapping("/csrf")
+    public CsrfToken getCsrf(HttpServletRequest request) {
+        return (CsrfToken) request.getAttribute(CsrfToken.class.getName());
     }
 
     @PostMapping("/regenerate")
